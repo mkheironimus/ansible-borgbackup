@@ -1,0 +1,6 @@
+#! /bin/bash
+# {{ ansible_managed }}
+
+. '{{ borg_system }}/environment.sh'
+export PATH=/usr/local/bin:/usr/bin:/bin
+exec borg "$@"

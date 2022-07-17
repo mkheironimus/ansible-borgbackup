@@ -1,0 +1,15 @@
+#! /bin/bash
+# {{ ansible_managed }}
+
+BORG_BASE_DIR='{{ borg_data }}'
+BORG_CACHE_DIR="${BORG_BASE_DIR}/cache"
+BORG_CONFIG_DIR="${BORG_BASE_DIR}/config"
+
+BORG_RSH="ssh -o 'ServerAliveInterval 10' -o 'ServerAliveCountMax 30' -o 'UserKnownHostsFile ${BORG_BASE_DIR}/ssh_known_hosts' -i ${BORG_BASE_DIR}/id_rsa"
+BORG_REPO='{{ borg_repo }}'
+
+export BORG_BASE_DIR BORG_CACHE_DIR BORG_CONFIG_DIR BORG_RSH BORG_REPO
+
+if [ -r "${BORG_BASE_DIR}/passphrase" ] ; then
+    export BORG_PASSPHRASE="$(< ${BORG_BASE_DIR}/passphrase)"
+fi

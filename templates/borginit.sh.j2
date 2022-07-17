@@ -1,0 +1,7 @@
+#! /bin/bash
+# {{ ansible_managed }}
+
+. '{{ borg_system }}/environment.sh'
+export PATH=/usr/local/bin:/usr/bin:/bin
+'{{ borg_system }}/borg.sh' init --encryption=repokey-blake2 "$@"
+exec borg key export "${BORG_REPO}" "${BORG_BASE_DIR}/repo.key"

@@ -1,0 +1,16 @@
+---
+- name: Install packages
+  package:
+    name:
+      - python3-dev
+      - python3-llfuse
+      - python3-msgpack
+      - libssl-dev
+      - libacl1-dev
+      - liblz4-dev
+      - libzstd-dev
+      - libb2-dev
+      - cron
+    state: present
+- name: Install via pip
+  include_tasks: pip.yml

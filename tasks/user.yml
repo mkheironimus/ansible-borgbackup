@@ -1,0 +1,51 @@
+---
+- name: Create user
+  user:
+    name: "{{ borgbackup_user }}"
+    comment: Borg Backup
+  register: borgbackup_user_data
+
+- name: Protect ssh client directory
+  file:
+    path: "{{ borgbackup_user_data.home }}/.ssh"
+    state: directory
+    owner: root
+    group: "{{ borgbackup_user_data.group }}"
+    mode: "0750"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Create user keypair
+  community.crypto.openssh_keypair:
+    backend: cryptography
+    path: "{{ borgbackup_user_data.home }}/.ssh/id_rsa"
+    size: "{{ borgbackup_key_size }}"
+    comment: "borgbackup@{{ ansible_hostname }}"
+    owner: root
+    group: "{{ borgbackup_user_data.group }}"
+    mode: "0640"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Configure ssh client
+  copy:
+    dest: "{{ borgbackup_user_data.home }}/.ssh/config"
+    owner: root
+    group: "{{ borgbackup_user_data.group }}"
+    mode: "0640"
+    content: |
+      Host *
+        ServerAliveInterval 10
+        ServerAliveCountMax 30
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Configure authorized keys
+  template:
+    src: authorized_keys.j2
+    dest: "{{ borgbackup_user_data.home }}/.ssh/authorized_keys"
+    owner: root
+    group: "{{ borgbackup_user_data.group }}"
+    mode: "0640"
+  vars:
+    client_keys: "{{ borgbackup_client_keys }}"
+    server_keys: "{{ borgbackup_server_keys }}"
+    job_directory: "{{ borgbackup_system_directory }}"
+  ignore_errors: "{{ ansible_check_mode }}"

@@ -1,0 +1,79 @@
+---
+- name: Create client data directory
+  file:
+    path: "{{ borgbackup_data_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: Configure environment script
+  template:
+    src: environment.sh.j2
+    dest: "{{ borgbackup_system_directory }}/environment.sh"
+    owner: root
+    group: root
+    mode: "0644"
+  vars:
+    borg_data: "{{ borgbackup_data_directory }}"
+    borg_repo: "{{ borgbackup_repo }}"
+
+- name: Configure wrapper script
+  template:
+    src: borg.sh.j2
+    dest: "{{ borgbackup_system_directory }}/borg.sh"
+    owner: root
+    group: root
+    mode: "0755"
+  vars:
+    borg_system: "{{ borgbackup_system_directory }}"
+
+- name: Configure repo init script
+  template:
+    src: borginit.sh.j2
+    dest: "{{ borgbackup_system_directory }}/borginit.sh"
+    owner: root
+    group: root
+    mode: "0755"
+  vars:
+    borg_system: "{{ borgbackup_system_directory }}"
+
+- name: Configure exclusions
+  template:
+    src: exclude.lst.j2
+    dest: "{{ borgbackup_system_directory }}/exclude.lst"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Configure backup script
+  template:
+    src: backup.sh.j2
+    dest: "{{ borgbackup_system_directory }}/backup.sh"
+    owner: root
+    group: root
+    mode: "0755"
+  vars:
+    backups: "{{ borgbackup_backups | dict2items }}"
+    borg_system: "{{ borgbackup_system_directory }}"
+
+- name: Create client keypair
+  community.crypto.openssh_keypair:
+    backend: cryptography
+    path: "{{ borgbackup_data_directory }}/id_rsa"
+    size: "{{ borgbackup_key_size }}"
+    comment: "client@{{ ansible_hostname }}"
+    owner: root
+    group: root
+    mode: "0600"
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Schedule daily backup
+  cron:
+    name: borgbackup_daily
+    minute: "3"
+    hour: "{{ borgbackup_daily_time if borgbackup_daily_time != '' else '0' }}"
+    user: root
+    job: "{{ borgbackup_system_directory }}/backup.sh 2>&1 | tee {{ borgbackup_data_directory }}/backup.log | logger -t borg"
+    cron_file: ansible_borgbackup
+    state: "{{ 'present' if borgbackup_daily_time != '' else 'absent' }}"

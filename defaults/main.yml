@@ -1,0 +1,50 @@
+---
+# Directory for scripts
+borgbackup_system_directory: /srv/borg
+
+# Directory for client cache, config, etc.
+borgbackup_data_directory: "{{ borgbackup_system_directory }}/data"
+#borgbackup_data_directory: /var/lib/borgbackup"
+
+# Directory for virtualenv install
+borgbackup_venv: "{{ borgbackup_system_directory }}/borgbackup"
+
+# Whether to upgrade (state=latest) or not (state=present)
+borgbackup_pip_latest: true
+
+# BORG_REPO setting
+borgbackup_repo: ""
+
+# Excluded paths/patterns
+borgbackup_exclude: []
+
+# SSH key bits
+borgbackup_key_size: 2048
+
+# User to create for network backups
+borgbackup_user: ""
+
+# SSH public keys to configure in the borg user when acting as a server
+borgbackup_client_keys: []
+#borgbackup_client_keys:
+#  - path: /srv/backup/client0
+#    key: keydata
+
+# SSH public keys to configure in the borg user for servers to initiate backups
+borgbackup_server_keys: []
+#borgbackup_server_keys:
+#  - job: backup.sh
+#    key: keydata
+
+# Hour for backups to be launched from cron
+borgbackup_daily_time: ""
+
+# Description of standard system backups to configure
+borgbackup_backups: {}
+#borgbackup_backups:
+#  system:
+#    path: /
+#    compression: zstd
+#    daily: 7
+#    weekly: 4
+#    prune: false

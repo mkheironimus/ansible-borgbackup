@@ -1,0 +1,13 @@
+# {{ ansible_managed }}
+/dev/shm/*
+/media/*
+/mnt/*
+/proc/*
+/run/*
+/sys/*
+/tmp/*
+/var/tmp/*
+
+{% for excl in borgbackup_exclude %}
+{{ excl }}
+{% endfor %}

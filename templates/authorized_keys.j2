@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+{% for k in client_keys %}
+command="cd {{ k.path }} ; borg serve --restrict-to-path {{ k.path }}",restrict {{ k.key }}
+{% endfor %}
+
+{% for k in server_keys %}
+command="sudo {{ job_directory }}/{{ k.job }}",restrict {{ k.key }}
+{% endfor %}

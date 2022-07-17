@@ -1,0 +1,25 @@
+---
+- name: Create venv
+  pip:
+    name: pip-tools
+    virtualenv: "{{ borgbackup_venv }}"
+    virtualenv_command: python3 -m venv
+
+- name: Install venv
+  pip:
+    name:
+      - borgbackup
+    virtualenv: "{{ borgbackup_venv }}"
+    state: "{{ 'latest' if borgbackup_pip_latest else 'present' }}"
+
+- name: Create script links
+  file:
+    src: "{{ borgbackup_venv }}/bin/{{ borg_pip_i }}"
+    dest: "/usr/local/bin/{{ borg_pip_i }}"
+    owner: root
+    group: root
+    state: link
+  loop:
+    - borg
+    - borgfs
+  loop_control: { loop_var: borg_pip_i }

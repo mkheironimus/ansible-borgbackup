@@ -1,0 +1,7 @@
+---
+- name: Install packages
+  package:
+    name:
+      - python-llfuse
+      - borg
+      - cronie
