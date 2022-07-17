@@ -2,11 +2,21 @@
 
 Install and configure BorgBackup on my home network.
 
-## Requirements
+## Install
+
+### Requirements
 
 * community.crypto - for ssh key generation. This brings in other Python module requirements, which is a headache on older systems.
 
-### On the client
+### requirements.yml Entry
+
+```yaml
+roles:
+  - name: borgbackup
+    src: https://github.com/mkheironimus/ansible-borgbackup.git
+```
+
+## On the client
 
 Role variables to set:
 
