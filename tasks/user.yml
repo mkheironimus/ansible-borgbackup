@@ -1,12 +1,12 @@
 ---
 - name: Create user
-  user:
+  ansible.builtin.user:
     name: "{{ borgbackup_user }}"
     comment: Borg Backup
   register: borgbackup_user_data
 
 - name: Protect ssh client directory
-  file:
+  ansible.builtin.file:
     path: "{{ borgbackup_user_data.home }}/.ssh"
     state: directory
     owner: root
@@ -26,7 +26,7 @@
   ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Configure ssh client
-  copy:
+  ansible.builtin.copy:
     dest: "{{ borgbackup_user_data.home }}/.ssh/config"
     owner: root
     group: "{{ borgbackup_user_data.group }}"
@@ -38,7 +38,7 @@
   ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Configure authorized keys
-  template:
+  ansible.builtin.template:
     src: authorized_keys.j2
     dest: "{{ borgbackup_user_data.home }}/.ssh/authorized_keys"
     owner: root

@@ -1,19 +1,19 @@
 ---
 - name: Create venv
-  pip:
+  ansible.builtin.pip:
     name: pip-tools
     virtualenv: "{{ borgbackup_venv }}"
     virtualenv_command: python3 -m venv
 
 - name: Install venv
-  pip:
+  ansible.builtin.pip:
     name:
       - borgbackup
     virtualenv: "{{ borgbackup_venv }}"
     state: "{{ 'latest' if borgbackup_pip_latest else 'present' }}"
 
 - name: Create script links
-  file:
+  ansible.builtin.file:
     src: "{{ borgbackup_venv }}/bin/{{ borg_pip_i }}"
     dest: "/usr/local/bin/{{ borg_pip_i }}"
     owner: root

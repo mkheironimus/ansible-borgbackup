@@ -1,6 +1,6 @@
 ---
 - name: Create client data directory
-  file:
+  ansible.builtin.file:
     path: "{{ borgbackup_data_directory }}"
     state: directory
     owner: root
@@ -8,7 +8,7 @@
     mode: "0700"
 
 - name: Configure environment script
-  template:
+  ansible.builtin.template:
     src: environment.sh.j2
     dest: "{{ borgbackup_system_directory }}/environment.sh"
     owner: root
@@ -19,7 +19,7 @@
     borg_repo: "{{ borgbackup_repo }}"
 
 - name: Configure wrapper script
-  template:
+  ansible.builtin.template:
     src: borg.sh.j2
     dest: "{{ borgbackup_system_directory }}/borg.sh"
     owner: root
@@ -29,7 +29,7 @@
     borg_system: "{{ borgbackup_system_directory }}"
 
 - name: Configure repo init script
-  template:
+  ansible.builtin.template:
     src: borginit.sh.j2
     dest: "{{ borgbackup_system_directory }}/borginit.sh"
     owner: root
@@ -39,7 +39,7 @@
     borg_system: "{{ borgbackup_system_directory }}"
 
 - name: Configure exclusions
-  template:
+  ansible.builtin.template:
     src: exclude.lst.j2
     dest: "{{ borgbackup_system_directory }}/exclude.lst"
     owner: root
@@ -47,7 +47,7 @@
     mode: "0644"
 
 - name: Configure backup script
-  template:
+  ansible.builtin.template:
     src: backup.sh.j2
     dest: "{{ borgbackup_system_directory }}/backup.sh"
     owner: root
@@ -69,7 +69,7 @@
   ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Schedule daily backup
-  cron:
+  ansible.builtin.cron:
     name: borgbackup_daily
     minute: "3"
     hour: "{{ borgbackup_daily_time if borgbackup_daily_time != '' else '0' }}"

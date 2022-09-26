@@ -1,6 +1,6 @@
 ---
 - name: Create system directory
-  file:
+  ansible.builtin.file:
     path: "{{ borgbackup_system_directory }}"
     state: directory
     owner: root
@@ -8,7 +8,7 @@
     mode: "0755"
 
 - name: Create repo directory
-  file:
+  ansible.builtin.file:
     path: "{{ borgbackup_system_directory }}/repo"
     state: directory
     owner: root
