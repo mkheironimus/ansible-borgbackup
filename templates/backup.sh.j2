@@ -36,7 +36,7 @@ if [ ${STATUS} -eq 0 ] ; then
 {% if job.value.monthly is defined %}
         --keep-monthly={{ job.value.monthly }} \
 {% endif %}
-        --prefix='{hostname}-{{ job.key }}-'
+        --glob-archives='{hostname}-{{ job.key }}-*'
     BACKUP_STATUS=$((BACKUP_STATUS + $?))
 fi
 {% endif %}
