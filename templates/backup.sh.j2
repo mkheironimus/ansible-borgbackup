@@ -42,4 +42,8 @@ fi
 {% endif %}
 
 {% endfor %}
+
+echo 'Create {{ job.value.path }}:'
+nice {{ borg_system }}/borg.sh compact --verbose
+
 exit ${BACKUP_STATUS}
