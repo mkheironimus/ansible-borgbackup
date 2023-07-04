@@ -1,4 +1,17 @@
 ---
+- name: OS-specific variables
+  include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      paths:
+        - vars
+      files:
+        - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+        - "{{ ansible_lsb.id }}.yml"
+
 - name: Create system directory
   ansible.builtin.file:
     path: "{{ borgbackup_system_directory }}"
@@ -33,3 +46,19 @@
         - "{{ ansible_distribution }}.yml"
         - "{{ ansible_os_family }}.yml"
         - "{{ ansible_lsb.id }}.yml"
+
+- name: Install dependencies
+  ansible.builtin.package:
+    name: "{{ borgbackup_dependencies }}"
+    state: present
+
+- name: Install via pip
+  include_tasks: pip.yml
+  when: borgbackup_pip | default(borgbackup_pip_dist) | default(false)
+
+- name: Install via package
+  ansible.builtin.package:
+    name:
+      - "{{ borgbackup_package }}"
+    state: present
+  when: not (borgbackup_pip | default(borgbackup_pip_dist) | default(false))

@@ -1,0 +1,5 @@
+---
+borgbackup_package: borg
+borgbackup_dependencies:
+  - python-llfuse
+  - cronie

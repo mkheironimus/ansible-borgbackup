@@ -2,6 +2,8 @@
 
 Install and configure BorgBackup on my home network.
 
+If an already-installed machine is changed from pip to OS package the symlinks in /usr/local/bin will need to be removed.
+
 ## Install
 
 ### Requirements

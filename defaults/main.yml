@@ -6,6 +6,9 @@ borgbackup_system_directory: /srv/borg
 borgbackup_data_directory: "{{ borgbackup_system_directory }}/data"
 #borgbackup_data_directory: /var/lib/borgbackup"
 
+# Use pip install instead of packages
+#borgbackup_pip: false
+
 # Directory for virtualenv install
 borgbackup_venv: "{{ borgbackup_system_directory }}/borgbackup"
 
