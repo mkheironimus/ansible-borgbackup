@@ -3,6 +3,10 @@
 
 BACKUP_STATUS=0
 
+for PREBACKUP in {{ borg_system }}/prebackup.d/* ; do
+    [ -x "${PREBACKUP}" ] && "${PREBACKUP}"
+done
+
 df --si
 
 {% for job in backups %}

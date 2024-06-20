@@ -57,6 +57,14 @@
     backups: "{{ borgbackup_backups | dict2items }}"
     borg_system: "{{ borgbackup_system_directory }}"
 
+- name: Create prebackup script directory
+  ansible.builtin.file:
+    path: "{{ borgbackup_system_directory }}/prebackup.d"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
 - name: Create client keypair
   community.crypto.openssh_keypair:
     backend: cryptography
